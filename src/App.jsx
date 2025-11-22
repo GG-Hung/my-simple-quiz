@@ -10,6 +10,8 @@ function App() {
   const [answerVisible, setAnswerVisible] = useState(false);
   const [questionVisible, setQuestionVisible] = useState(true);
   const [replayVisible, setReplayVisible] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+
 
   const resetQuiz = () => {
     allAnswers = [];
@@ -20,6 +22,15 @@ function App() {
     setReplayVisible(false);
   }
 
+  const darkModeToggle = () => {
+    if (document.body.style.background === 'black') {
+      document.body.style = 'background: white;';
+      setDarkMode(false);
+      return
+    }
+    document.body.style = 'background: black;';
+    setDarkMode(true);
+  }
 
   const handleClick = (event) => {
     console.log(event.index);
@@ -56,6 +67,7 @@ function App() {
           <button class="px-8 py-4">About</button>
           <button class="px-8 py-4">Articles</button>
           <button class="px-8 py-4">Home</button>
+          <button class="px-8 py-4" onClick={darkModeToggle}>Change Mode</button>
         </ul>
       </div>
       { replayVisible ? (
@@ -67,20 +79,21 @@ function App() {
       ) : null }
       { questionVisible ? (
         <div id="quiz-section">
-          <h2 class="text-3xl font-bold mx-10 my-10">{currentQuestion.questionText}</h2>
-          <p class="mx-10">{currentQuestion.options.map((options, index) => <p class="transition duration-200 hover:text-blue-600 cursor-pointer" onClick={() => handleClick({index})}>- {options}</p>)}</p>
+          <p class={darkMode ? 'text-white' : 'text-black'}>example text</p>
+          <h2 id="question" className={`text-3xl font-bold mx-10 my-10 ${darkMode ? 'text-white' : 'text-black'}`}>{currentQuestion.questionText}</h2>
+          <p class="mx-10">{currentQuestion.options.map((options, index) => <p id="answer" className={`transition duration-200 hover:text-blue-600 cursor-pointer ${darkMode ? 'text-white' : 'text-black'}`} onClick={() => handleClick({index})}>- {options}</p>)}</p>
         </div>
       ) : null }
       { answerVisible ? (
         <div id="scoreboard" class="m-10 p-5 border-2 border-blue-500">
-          <h2 class="text-2xl font-bold mb-5">Scoreboard</h2>
-          <p class="mb-5">Your score is: {score} / {quizData.length}</p>
+          <h2 className={`text-2xl font-bold mb-5 ${darkMode ? 'text-white' : 'text-black'}`}>Scoreboard</h2>
+          <p className={`mb-5 ${darkMode ? 'text-white' : 'text-black'}`}>Your score is: {score} / {quizData.length}</p>
           <div>
             {quizData.map((item, index) => (
               <div class="mb-5">
-                <h3 class="font-bold">{index + 1}. {item.questionText}</h3>
+                <h3 className={`font-bold ${darkMode ? 'text-white' : 'text-black'}`}>{index + 1}. {item.questionText}</h3>
                 <p class={item.options[allAnswers[index]] === item.options[item.correctAnswerIndex] ? 'text-green-400' : 'text-red-500'}>Your answer: {item.options[allAnswers[index]]}</p>
-                <p>Correct answer: {item.options[item.correctAnswerIndex]}</p>
+                <p class={darkMode ? 'text-white' : 'text-black'}>Correct answer: {item.options[item.correctAnswerIndex]}</p>
               </div>
             ))}
           </div>
